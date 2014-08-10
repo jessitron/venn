@@ -2,7 +2,7 @@ require 'rantly'
 
 class Rantly
 
-  def chunk(array)
+  def chunk(array, qty)
     Enumerator.new do |yielder|
       def bite(yielder, (head, *tail))
         yielder.yield [head]
