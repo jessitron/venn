@@ -22,7 +22,9 @@ class CustomGenerators
     def sources_of(records)
       #TODO: chunk these randomly
       Generator.new(->() {
-        [source_of(records).sample] + source_of([]).sample_n(number_of_sources - 1)
+        rantly.chunk(records, number_of_sources).map do |r|
+          TestSource.new(r)
+        end
       })
     end
 

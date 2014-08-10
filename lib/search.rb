@@ -6,6 +6,6 @@ class Search
 
   def find_buyers(item, result_qty)
     # boo
-    @sources[0].query(item)
+    @sources.flat_map{ |s| s.query(item) }
   end
 end
