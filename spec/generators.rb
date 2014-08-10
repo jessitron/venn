@@ -63,6 +63,15 @@ module Generators
                     [75, ->(r) {r.range(0,max)} ])} )
     end
 
+    class Thing
+    end
+    # Return unique objects never equal to each other
+    def things
+      Generator.new(->() {
+        Thing.new
+      })
+    end
+
     def rantly; Rantly.singleton end
 
   end
