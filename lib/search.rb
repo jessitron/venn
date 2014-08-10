@@ -6,6 +6,6 @@ class Search
 
   def find_buyers(item, result_qty)
     # boo
-    "poo"
+    @sources[0].query(item)
   end
 end
