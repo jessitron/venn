@@ -4,15 +4,16 @@ class Rantly
 
   def chunk(array, qty)
     Enumerator.new do |yielder|
-      def bite(yielder, (head, *tail))
-        yielder.yield [head]
-        if (not tail.empty?) then
-          bite(yielder, tail)
+      def bite(yielder, array, chunks)
+        if (chunks == 1) then
+          yielder.yield array
+        else
+          yield_this_many = range(0, array.size)
+          yielder.yield array.take(yield_this_many)
+          bite(yielder, array.drop(yield_this_many), chunks - 1)
         end
       end
-      if (array.empty?) then []
-      else      bite(yielder, array)
-      end
+      bite(yielder, array, qty)
     end.to_a
   end
 end

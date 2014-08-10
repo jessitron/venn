@@ -8,7 +8,7 @@ describe Rantly do
       property_of {
         Generators.of_two(
           Generators.any_number_of(Generators.things),
-          Generators.some_array_len
+          Generator.new(->() { Generators.rantly.range(1)})
         ).sample
       }.check { |(input,qty)|
         result = Rantly.new.chunk(input, qty)
