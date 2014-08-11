@@ -42,6 +42,10 @@ module Generators
       })
     end
 
+    def of(*args)
+      args
+    end
+
     def any_number_of(inner)
       Generator.new( ->() {
         inner.sample_n(some_array_len.sample)

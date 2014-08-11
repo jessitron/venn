@@ -1,22 +1,22 @@
 require_relative 'spec_helper'
-require_relative '../lib/influence.rb'
+require_relative '../lib/search.rb'
 
 describe Search do
 
   it "example: returns some calculated numbers" do
     now = Time.now
     earlier = now - 60
-    purchase_service = TestPurchaseAdapter(
-      (1..5).map { |i| Purchase.new(when: now, customer_id: i)})
-    email_service = TestChannelAdapter("email",
-                                       [Event.new(when: earlier, who: 1, what: :email_sent )])
-    mobile_service = TestChannelAdapter("mobile",
-                                        [Event.new(when: earlier, who: 2, what: :mobile_view),
-                                         Event.new(when: earlier, who: 3, what: :mobile_view)])
-    web_service = TestChannelAdapter("web", [Event.new(when: earlier, who: 4, what: :ad_click),
-                                             Event.new(when: earlier, who: 4, what: :ad_show),
-                                             Event.new(when: earlier, who: 3, what: :ad_show),
-                                             Event.new(when: earlier, who: 5, what: :ad_show)])
+    purchase_service = TestPurchaseAdapter.new(
+      (1..5).map { |i| Purchase.new(when_time: now, customer_id: i)})
+    email_service = TestChannelAdapter.new("email",
+                                       [Event.new(when_time: earlier, who: 1, what: :email_sent )])
+    mobile_service = TestChannelAdapter.new("mobile",
+                                        [Event.new(when_time: earlier, who: 2, what: :mobile_view),
+                                         Event.new(when_time: earlier, who: 3, what: :mobile_view)])
+    web_service = TestChannelAdapter.new("web", [Event.new(when_time: earlier, who: 4, what: :ad_click),
+                                             Event.new(when_time: earlier, who: 4, what: :ad_show),
+                                             Event.new(when_time: earlier, who: 3, what: :ad_show),
+                                             Event.new(when_time: earlier, who: 5, what: :ad_show)])
     item = Item.new("Rooster")
     actual = InfluenceService.new(purchase_service,
                                   { email: email_service,

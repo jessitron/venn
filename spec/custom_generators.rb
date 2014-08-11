@@ -11,6 +11,16 @@ class CustomGenerators
       })
     end
 
+    def purchase
+    end
+
+    def channel_events
+      []
+    end
+
+    def channel
+    end
+
     def record
       Generator.new(->() {
         { customer: rantly.string(:alpha) }
