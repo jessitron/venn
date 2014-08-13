@@ -12,20 +12,19 @@ describe InfluenceService do
     earlier = now - 60
     purchase_service = TestPurchaseAdapter.new(
       (1..5).map { |i| Purchase.new(when_time: now, customer_id: i)})
-    email_service = TestChannelAdapter.new("email",
-                                       [Event.new(when_time: earlier, who: 1, what: :email_sent )])
-    mobile_service = TestChannelAdapter.new("mobile",
-                                        [Event.new(when_time: earlier, who: 2, what: :mobile_view),
-                                         Event.new(when_time: earlier, who: 3, what: :mobile_view)])
-    web_service = TestChannelAdapter.new("web", [Event.new(when_time: earlier, who: 4, what: :ad_click),
-                                             Event.new(when_time: earlier, who: 4, what: :ad_show),
-                                             Event.new(when_time: earlier, who: 3, what: :ad_show),
-                                             Event.new(when_time: earlier, who: 5, what: :ad_show)])
+    services = make_adapters({
+      email: [Event.new(when_time: earlier, who: 1, what: :email_sent )],
+
+      mobile: [Event.new(when_time: earlier, who: 2, what: :mobile_view),
+               Event.new(when_time: earlier, who: 3, what: :mobile_view)],
+
+      web: [Event.new(when_time: earlier, who: 4, what: :ad_click),
+            Event.new(when_time: earlier, who: 4, what: :ad_show),
+            Event.new(when_time: earlier, who: 3, what: :ad_show),
+            Event.new(when_time: earlier, who: 5, what: :ad_show)]})
+
     item = Item.new("Rooster")
-    actual = InfluenceService.new(purchase_service,
-                                  { email: email_service,
-                                    mobile: mobile_service,
-                                    web: web_service}).investigate(item)
+    actual = InfluenceService.new(purchase_service, services).investigate(item)
     expected = PurchaseAttribution.new(
       total_purchases = 5,
       channels = { email: ChannelInfluence.new(num_purchases=1, relevance=20),
