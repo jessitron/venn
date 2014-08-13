@@ -1,7 +1,11 @@
 require_relative 'spec_helper'
-require_relative '../lib/search.rb'
+require_relative '../lib/influence'
 
-describe Search do
+describe InfluenceService do
+
+  def make_adapters(channel_events)
+    channel_events.map {|(channel,events)| TestChannelAdapter.new(channel, events)}
+  end
 
   it "example: returns some calculated numbers" do
     now = Time.now
@@ -29,10 +33,6 @@ describe Search do
         web: ChannelInfluence.new(num_purchases=3, relevance=50)})
 
     expect(actual).to eq(expected)
-  end
-
-  def make_adapters(channel_events)
-    channel_events.map {|(channel,events)| TestChannelAdapter.new(channel, events)}
   end
 
   it "returns a reasonable amount of influence" do
