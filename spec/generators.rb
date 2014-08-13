@@ -43,12 +43,14 @@ module Generators
     end
 
     def of(*args)
-      args
+      Generator.new( ->() {
+        args.map(&:sample)
+      })
     end
 
-    def any_number_of(inner)
+    def any_number_of(inner, max=100)
       Generator.new( ->() {
-        inner.sample_n(some_array_len.sample)
+        inner.sample_n(some_array_len(max).sample)
       })
     end
 
@@ -67,6 +69,18 @@ module Generators
                     [75, ->(r) {r.range(0,max)} ])} )
     end
 
+    def rantly; Rantly.singleton end
+
+    @@rantly = Rantly.singleton
+    @@integer = Generator.new(->() { @@rantly.integer(1000000) })
+    @@string = Generator.new(->() { @@rantly.string(:print)})
+
+    def some_generator
+      Generator.new( ->() {
+        rantly.choose(@@integer, @@string)
+      })
+    end
+
     class Thing
     end
     # Return unique objects never equal to each other
@@ -75,8 +89,5 @@ module Generators
         Thing.new
       })
     end
-
-    def rantly; Rantly.singleton end
-
   end
 end

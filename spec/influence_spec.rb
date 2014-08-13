@@ -2,14 +2,14 @@ require_relative 'spec_helper'
 require_relative '../lib/influence'
 
 describe InfluenceService do
+  let(:now) { Time.now }
+  let(:earlier) { now - 60 }
 
   def make_adapters(channel_events)
     channel_events.map {|(channel,events)| TestChannelAdapter.new(channel, events)}
   end
 
   it "example: returns some calculated numbers" do
-    now = Time.now
-    earlier = now - 60
     purchase_service = TestPurchaseAdapter.new(
       (1..5).map { |i| Purchase.new(when_time: now, customer_id: i)})
     services = make_adapters({
