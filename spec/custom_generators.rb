@@ -12,6 +12,11 @@ class CustomGenerators
     end
 
     def purchase
+      Generators.time.flat_map(->(whence) {
+        Generators.pos_int.map(->(customer_id) {
+          Purchase.new(when_time: whence, customer_id: customer_id)
+        })
+      })
     end
 
     def channel_events
