@@ -19,8 +19,33 @@ class CustomGenerators
       })
     end
 
+    def event_kinds(type)
+      possible_kinds = { email: [:email_sent, :read, :click],
+                         mobile: [:mobile_view, :click],
+                         web: [:ad_show, :ad_click] }
+      my_kinds = possible_kinds[type]
+      result = Generator.new(->() { rantly.choose(*my_kinds)}, "event kinds for #{type}")
+      result
+    end
+
+    def event(type)
+      Generators.time.flat_map(->(whence) {
+        Generators.pos_int.flat_map(->(customer_id) {
+          event_kinds(type).map(->(what) {
+            Event.new(when_time: whence, who: customer_id, what: what)
+          })
+        })
+      })
+    end
+
+    @@channels = [:web, :mobile, :email]
+
     def channel_events
-      []
+      #cheating
+      Generator.new(->() {
+        @@channels.map {|c| [c, Generators.any_number_of(event(c)).sample]}.
+          to_h
+      })
     end
 
     def channel

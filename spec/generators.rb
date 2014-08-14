@@ -21,12 +21,12 @@ class Generator
 
   def map(f)
     inner = self
-    Generator.new(->(e) {f(inner.sample)})
+    Generator.new(->() {f.call(inner.sample)})
   end
 
   def flat_map(f)
     inner = self
-    Generator.new(->(e) { f(inner.sample).sample })
+    Generator.new(->() { f.call(inner.sample).sample })
   end
 
   def filter(predicate)
@@ -66,7 +66,7 @@ module Generators
     end
 
     def time(no_later_than=Time.now)
-      @@pos_int.map(->(i) { no_later_than - i })
+      pos_int.map(->(i) { no_later_than - i })
     end
 
     def any_number_of(inner, max=100)
@@ -94,10 +94,11 @@ module Generators
 
     @@rantly = Rantly.singleton
     @@integer = Generator.new(->() { @@rantly.integer(1000000) }, "ints up to a million")
-    @@pos_int = Generator.new(->() { @@rantly.positive_integer }, "positive ints up to a LOT")
     @@string = Generator.new(->() { @@rantly.string(:print)}, "printable characters")
 
-    attr_accessor :pos_int
+    def pos_int
+      Generator.new(->() { @@rantly.positive_integer }, "positive ints up to a LOT")
+    end
 
     def some_generator
       Generator.new( ->() {
