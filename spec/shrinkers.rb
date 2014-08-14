@@ -1,6 +1,35 @@
 require 'rantly/shrinks'
 
 module Shrinkers
+
+  class << self
+
+    # chop an array around the first
+    # item that satisfies the predicate.
+    # returns [[all, false, items], true_item, [everything, else]]
+    def split_around(arr, predicate)
+      compl = ->(e) { not predicate.call(e)}
+      after = arr.drop_while &compl
+      before = arr.take_while &compl
+      [before, after.first, after.drop(1)]
+    end
+
+    # monkeypatching!! to override what
+    # rantly does to class Array. This array will never
+    # shrink in size, it'll only shrink its elements.
+    def fixed_len_array(a)
+      def a.shrink
+        (before, shrink_me, after) = split_around(arr, ->(e) {e.shrinkable?})
+        next_smallest = before + [shrink_me.shrink] + after
+        Shrinkers.fixed_len_array(next_smallest) #maintain this property
+      end
+
+      def a.shrinkable?
+        a.any? &:shrinkable?
+      end
+    end
+  end
+
   #shrink an array of 2 inputs properly
   def self.shrink_like_i_say(r)
     def r.shrink

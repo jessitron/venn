@@ -44,7 +44,7 @@ module Generators
 
     def of(*args)
       Generator.new( ->() {
-        args.map(&:sample)
+        Shrinkers.fixed_len_array(args.map(&:sample))
       })
     end
 
