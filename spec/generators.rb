@@ -2,8 +2,9 @@ require 'rantly'
 require_relative 'shrinkers'
 
 class Generator
-  def initialize(how_to_produce)
+  def initialize(how_to_produce, description="stuff")
     @produce = how_to_produce
+    @description = description
   end
 
   def not_shrinkable
@@ -29,6 +30,12 @@ class Generator
       r
     end
   end
+
+  def inspect
+    "Generator of " + @description
+  end
+
+  attr_accessor :description
 end
 
 
@@ -45,7 +52,7 @@ module Generators
     def of(*args)
       Generator.new( ->() {
         Shrinkers.fixed_len_array(args.map(&:sample))
-      })
+      }, args.map(&:description).join("+"))
     end
 
     def any_number_of(inner, max=100)
@@ -72,8 +79,8 @@ module Generators
     def rantly; Rantly.singleton end
 
     @@rantly = Rantly.singleton
-    @@integer = Generator.new(->() { @@rantly.integer(1000000) })
-    @@string = Generator.new(->() { @@rantly.string(:print)})
+    @@integer = Generator.new(->() { @@rantly.integer(1000000) }, "ints up to a million")
+    @@string = Generator.new(->() { @@rantly.string(:print)}, "printable characters")
 
     def some_generator
       Generator.new( ->() {

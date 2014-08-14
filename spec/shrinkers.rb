@@ -19,14 +19,16 @@ module Shrinkers
     # shrink in size, it'll only shrink its elements.
     def fixed_len_array(a)
       def a.shrink
-        (before, shrink_me, after) = split_around(arr, ->(e) {e.shrinkable?})
+        (before, shrink_me, after) =
+          Shrinkers.split_around(self, (lambda &:shrinkable?))
         next_smallest = before + [shrink_me.shrink] + after
         Shrinkers.fixed_len_array(next_smallest) #maintain this property
       end
 
       def a.shrinkable?
-        a.any? &:shrinkable?
+        any? &:shrinkable?
       end
+      a
     end
   end
 
