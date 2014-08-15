@@ -45,6 +45,7 @@ describe InfluenceService do
       result = InfluenceService.new(TestPurchaseAdapter.new(purchases),
                                     make_adapters(channel_events)).investigate(item)
 
+      expect(result.channels.keys).to include(:web,:mobile,:email)
       result.channels.each do |(channel, influence)|
         expect(influence.num_purchases).to be <= total_purchases
         expect(influence.relevance).to be <= 100

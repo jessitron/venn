@@ -28,15 +28,31 @@ class InfluenceService
 
   end
 
+  @channels = [:email, :web, :mobile]
   def investigate(item)
-
+    channel_stuff = @channels.map { |c| Influence.new n,r }
+    PurchaseAttribution.new()
   end
+end
+
+class Influence
+  attr_accessor :num_purchases, :relevance
+  def initialize(n, r)
+    @num_purchases = n
+    @relevance = r
+  end
+
 end
 
 class PurchaseAttribution
 
-  def initialize(total_purchases = 0, channels = {})
+  attr_accessor :channels, :total_purchases
 
+  def initialize(total_purchases = 0, channels)
+    @channels = channels
+    @total_purchases = total_purchases
   end
+
+
 end
 

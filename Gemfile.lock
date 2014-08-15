@@ -1,4 +1,9 @@
 PATH
+  remote: ../generatron
+  specs:
+    generatron (0.0.1)
+
+PATH
   remote: ../rantly
   specs:
     rantly (0.3.0)
@@ -54,6 +59,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  generatron!
   guard
   guard-rspec
   rantly!
