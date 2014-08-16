@@ -10,9 +10,13 @@ class CustomGenerators
       })
     end
 
+    def customer_id
+      Generators.pos_int
+    end
+
     def purchase
       Generators.time.flat_map(->(whence) {
-        Generators.pos_int.map(->(customer_id) {
+        customer_id.map(->(customer_id) {
           Purchase.new(when_time: whence, customer_id: customer_id)
         })
       })
@@ -28,19 +32,17 @@ class CustomGenerators
     end
 
     def event(type)
-      Generators.time.flat_map(->(whence) {
-        Generators.pos_int.flat_map(->(customer_id) {
-          event_kinds(type).map(->(what) {
-            Event.new(when_time: whence, who: customer_id, what: what)
-          })
-        })
+      Generators.new(->() {
+        whence = Generators.time.sample
+        customer_id = CustomGenerators.customer_id.sample
+        what = CustomGenerators.event_kinds(type).sample
+        Event.new(when_time: whence, who: customer_id, what: what)
       })
     end
 
     @@channels = [:web, :mobile, :email]
 
     def channel_events
-      #cheating
       Generator.new(->() {
         @@channels.map {|c| [c, Generators.any_number_of(event(c)).sample]}.
           to_h
@@ -48,6 +50,7 @@ class CustomGenerators
     end
 
     def channel
+      Generator.new(->() { rantly.choose(:email, :web, :mobile)})
     end
 
     def record
