@@ -56,7 +56,7 @@ describe InfluenceService do
 
   def service_test(events, purchases, item)
     adapters = make_adapters events
-    InfluenceService.new(TestPurchaseAdapter.new(purchases, adapters)).investigate(item)
+    InfluenceService.new(TestPurchaseAdapter.new(purchases),adapters).investigate(item)
   end
 
   it "sees influence lower with fewer interactions" do
@@ -71,7 +71,8 @@ describe InfluenceService do
         original = service_test(channel_events, purchases, item)
         channel_events[channel].pop #mutation
         fewer_interactions = service_test(channel_events, purchases, item)
-        expect(fewer_interactions.relevance).to be < original.relevance
+        relevance = ->(r) {r.channels[channel].relevance}
+        expect(relevance.(fewer_interactions)).to be < relevance.(original)
       end
     end
   end
