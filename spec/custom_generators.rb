@@ -32,7 +32,7 @@ class CustomGenerators
     end
 
     def event(type)
-      Generators.new(->() {
+      Generator.new(->() {
         whence = Generators.time.sample
         customer_id = CustomGenerators.customer_id.sample
         what = CustomGenerators.event_kinds(type).sample
