@@ -17,9 +17,10 @@ class Item
 end
 
 class ChannelInfluence
-
-  def initialize(num_purchases = 0, relevance = 0)
-
+  attr_accessor :num_purchases, :relevance
+  def initialize(n, r)
+    @num_purchases = n
+    @relevance = r
   end
 end
 
@@ -28,27 +29,18 @@ class InfluenceService
 
   end
 
-  @channels = [:email, :web, :mobile]
   def investigate(item)
-    channel_stuff = @channels.map { |c| Influence.new n,r }
-    PurchaseAttribution.new()
+    channels = [:email, :web, :mobile]
+    channel_stuff = channels.map { |c| [c, ChannelInfluence.new(0,0)]}.to_h
+    PurchaseAttribution.new(0, channel_stuff)
   end
-end
-
-class Influence
-  attr_accessor :num_purchases, :relevance
-  def initialize(n, r)
-    @num_purchases = n
-    @relevance = r
-  end
-
 end
 
 class PurchaseAttribution
 
   attr_accessor :channels, :total_purchases
 
-  def initialize(total_purchases = 0, channels)
+  def initialize(total_purchases, channels)
     @channels = channels
     @total_purchases = total_purchases
   end
