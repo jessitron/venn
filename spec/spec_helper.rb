@@ -5,7 +5,10 @@ require_relative 'custom_generators'
 
 class TestPurchaseAdapter
   def initialize(purchases)
-
+    @purchases = purchases
+  end
+  def retrieve_purchases(item)
+    @purchases
   end
 end
 

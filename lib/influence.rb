@@ -38,12 +38,14 @@ end
 class InfluenceService
   def initialize(purchase_source, channel_event_sources)
     @channel_event_sources = channel_event_sources
+    @purchase_source = purchase_source
   end
 
   def investigate(item)
+    purchases = @purchase_source.retrieve_purchases(:foo)
     channel_stuff = @channel_event_sources.map do |event_source|
       events = event_source.retrieve_events(:foo)
-      [event_source.channel, ChannelInfluence.new(events.size, events.size)]
+      [event_source.channel, ChannelInfluence.new(purchases.size, events.size)]
     end
     PurchaseAttribution.new(0, channel_stuff.to_h)
   end
