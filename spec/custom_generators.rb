@@ -17,7 +17,7 @@ class CustomGenerators
     def purchase
       Generators.time.flat_map(->(whence) {
         customer_id.map(->(customer_id) {
-          Purchase.new(when_time: whence, customer_id: customer_id)
+          Purchase.new(when_time = whence, customer_id = customer_id)
         })
       })
     end
@@ -36,7 +36,7 @@ class CustomGenerators
         whence = Generators.time.sample
         customer_id = CustomGenerators.customer_id.sample
         what = CustomGenerators.event_kinds(type).sample
-        Event.new(when_time: whence, who: customer_id, what: what)
+        Event.new(when_time = whence, who = customer_id, what = what)
       })
     end
 

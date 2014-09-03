@@ -1,18 +1,29 @@
 class Purchase
   def initialize(when_time = nil, customer_id = nil)
+    @whence = when_time
+    @who = customer_id
+  end
 
+  def inspect
+    "Purchase by #{@customer_id} at #{@whence}"
   end
 end
 
 class Event
   def initialize(when_time = nil, who = nil, what = nil)
+    @whence = when_time
+    @who = who
+    @what = what
+  end
 
+  def inspect
+    "Event: #{@who} did #{@what} at #{@whence}"
   end
 end
 
 class Item
   def initialize(thing)
-
+    @description = thing
   end
 end
 
