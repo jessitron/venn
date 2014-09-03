@@ -29,21 +29,23 @@ end
 
 class ChannelInfluence
   attr_accessor :num_purchases, :relevance
-  def initialize(n, r)
-    @num_purchases = n
-    @relevance = r
+  def initialize(num_purchases, relevance)
+    @num_purchases = num_purchases
+    @relevance = relevance
   end
 end
 
 class InfluenceService
-  def initialize(service, data)
-
+  def initialize(purchase_source, channel_event_sources)
+    @channel_event_sources = channel_event_sources
   end
 
   def investigate(item)
-    channels = [:email, :web, :mobile]
-    channel_stuff = channels.map { |c| [c, ChannelInfluence.new(0,0)]}.to_h
-    PurchaseAttribution.new(0, channel_stuff)
+    channel_stuff = @channel_event_sources.map do |event_source|
+      events = event_source.retrieve_events(:foo)
+      [event_source.channel, ChannelInfluence.new(events.size, events.size)]
+    end
+    PurchaseAttribution.new(0, channel_stuff.to_h)
   end
 end
 

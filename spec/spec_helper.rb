@@ -10,7 +10,14 @@ class TestPurchaseAdapter
 end
 
 class TestChannelAdapter
-  def initialize(event_name, events)
+  attr_reader :channel
+  # someday this would accept instructions for being slow and failing
+  def initialize(channel, events)
+     @events = events
+     @channel = channel
+  end
 
+  def retrieve_events(purchases)
+    @events
   end
 end
